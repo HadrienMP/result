@@ -49,7 +49,6 @@ public interface Result<S, E> {
 
     S orElseThrow(Function<E, ? extends RuntimeException> function);
 
-
     default boolean isError() {
         return !isSuccess();
     }
