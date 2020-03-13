@@ -1,15 +1,12 @@
 Result
 ======
 Provides a result monad for **jvm** based applications. If you don't know what a monad is,
-you still can use Result. It is a just an interface that has two implementations, **Success**
-and **Error**. It is a good way to represent the output of a function that can fail.  
+you still can use Result. Just think of Result as a box that can contain either a success result or an error.
+Once you have the box, you have access to function to transform the success result, 
+extract it, act on successes or failures and more.   
 
-You can store the result of your function in Success if it succeeded. 
-And store the result of your function, and store the reason for the failure
-in Error.  
-
-An Arolla blog post will explore in further details, how this can be useful in error
-management.
+It is very handy for error management and railway programming. A blog post will soon describe how it can be
+handy as an error mangement tool.
 
 Install
 -------
