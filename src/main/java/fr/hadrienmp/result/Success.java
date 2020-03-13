@@ -1,5 +1,6 @@
 package fr.hadrienmp.result;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -55,5 +56,25 @@ public class Success<S, E> implements Result<S, E> {
     @Override
     public S orElseThrow(Function<E, ? extends RuntimeException> function) {
         return this.result;
+    }
+
+    @Override
+    public String toString() {
+        return "Success{" +
+                "result=" + result +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Success)) return false;
+        Success<?, ?> success = (Success<?, ?>) o;
+        return Objects.equals(result, success.result);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(result);
     }
 }
