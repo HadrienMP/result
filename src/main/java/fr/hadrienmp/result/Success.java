@@ -33,11 +33,6 @@ public class Success<S, E> implements Result<S, E> {
     }
 
     @Override
-    public <T> Result<T, E> flatMap(Function<S, Result<T, E>> successFunction) {
-        return successFunction.apply(this.result);
-    }
-
-    @Override
     public Result<S, E> onSuccess(Consumer<S> successFunction) {
         successFunction.accept(this.result);
         return this;
@@ -46,6 +41,11 @@ public class Success<S, E> implements Result<S, E> {
     @Override
     public void onError(Consumer<E> errorFunction) {
         // Nothing to do
+    }
+
+    @Override
+    public <T> Result<T, E> flatMap(Function<S, Result<T, E>> mapFunction) {
+        return mapFunction.apply(this.result);
     }
 
     @Override

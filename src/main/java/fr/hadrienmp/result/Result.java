@@ -63,11 +63,11 @@ public interface Result<S, E> {
 
     <T> Result<T, E> map(Function<S, T> successFunction);
 
-    <T> Result<T, E> flatMap(Function<S, Result<T, E>> successFunction);
-
     Result<S, E> onSuccess(Consumer<S> successFunction);
 
     void onError(Consumer<E> errorFunction);
+
+    <T> Result<T, E> flatMap(Function<S, Result<T, E>> mapFunction);
 
     interface FailableSupplier<S, E extends Throwable> {
         S get() throws E;

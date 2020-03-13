@@ -1,5 +1,6 @@
 package fr.hadrienmp.result;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -32,11 +33,6 @@ public class Error<S, E> implements Result<S, E> {
     }
 
     @Override
-    public <T> Result<T, E> flatMap(Function<S, Result<T, E>> successFunction) {
-        return Result.error(this.error);
-    }
-
-    @Override
     public Result<S, E> onSuccess(Consumer<S> successFunction) {
         return this;
     }
@@ -52,14 +48,32 @@ public class Error<S, E> implements Result<S, E> {
     }
 
     @Override
-    public String toString() {
-        return "Error{" +
-               "error=" + this.error +
-               '}';
+    public <T> Result<T, E> flatMap(Function<S, Result<T, E>> mapFunction) {
+        return Result.error(this.error);
     }
 
     @Override
     public S orElseThrow(Function<E, ? extends RuntimeException> function) {
         throw function.apply(this.error);
+    }
+
+    @Override
+    public String toString() {
+        return "Error{" +
+                "error=" + this.error +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Error)) return false;
+        Error<?, ?> error1 = (Error<?, ?>) o;
+        return Objects.equals(error, error1.error);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(error);
     }
 }

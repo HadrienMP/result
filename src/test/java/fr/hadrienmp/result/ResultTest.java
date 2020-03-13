@@ -9,6 +9,31 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ResultTest {
     /*
      * -------------------------
+     * Flat Map (bind)
+     * -------------------------
+     */
+
+    @Test
+    public void monad_law_left_side_identity_for_success() {
+        String ok = "OK";
+        Function<String, Result<String, String>> mapFunction = s -> Result.success("Mapped: " + s);
+        Result<String, String> result = Result.success(ok);
+
+        assertThat(result.flatMap(mapFunction))
+                .isEqualTo(mapFunction.apply(ok));
+    }
+
+    @Test
+    public void monad_law_left_side_identity_for_error() {
+        Function<String, Result<String, String>> mapFunction = s -> Result.success("Mapped: " + s);
+
+        Result<String, String> result = Result.error("KO");
+
+        assertThat(result.flatMap(mapFunction)).isEqualTo(result);
+    }
+
+    /*
+     * -------------------------
      * Map
      * -------------------------
      */
