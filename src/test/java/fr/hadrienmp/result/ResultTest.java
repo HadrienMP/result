@@ -13,23 +13,21 @@ public class ResultTest {
      * -------------------------
      */
 
-    /**
-     * Monad law
-     */
     @Test
     public void mapping_a_success_result_will_the_return_a_new_result_than_contains_the_output_of_map_function() {
         String ok = "OK";
         Function<String, String> mapFunction = s -> "Mapped: " + s;
+
         assertThat(Result.success(ok).map(mapFunction))
                 .isEqualTo(Result.success(mapFunction.apply(ok)));
     }
 
-//    @Test
-//    public void mapping_an_error_will_return_a_new_error_containing_the_existing_error() {
-//        Result<String, String> success = Result.error("KO");
-//        String result = success.fold(s -> "Success: " + s, error -> "Failure: " + error);
-//        assertThat(result).isEqualTo("Failure: KO");
-//    }
+    @Test
+    public void mapping_an_error_will_return_a_new_error_containing_the_existing_error() {
+        Result<String, String> success = Result.error("KO");
+        String result = success.fold(s -> "Success: " + s, error -> "Failure: " + error);
+        assertThat(result).isEqualTo("Failure: KO");
+    }
     /*
      * -------------------------
      * Fold
