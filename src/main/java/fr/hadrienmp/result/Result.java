@@ -3,7 +3,6 @@ package fr.hadrienmp.result;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public interface Result<S, E> {
     static <S, E> Result<S, E> success(S result) {
@@ -22,27 +21,28 @@ public interface Result<S, E> {
         return success(null);
     }
 
-    static Result<Void, RuntimeException> ofFailableRunnable(Runnable runnable) {
+    static Result<Void, Throwable> ofFailable(FailableRunnable<?> runnable) {
         try {
             runnable.run();
             return success();
-        } catch (RuntimeException exception) {
+        } catch (Throwable exception) {
             return error(exception);
         }
     }
 
-    static <T> Result<T, RuntimeException> ofFailable(Supplier<T> runnable) {
-        try {
-            return success(runnable.get());
-        } catch (RuntimeException exception) {
-            return error(exception);
-        }
-    }
-
-    static <S> Result<S, Throwable> ofCheckedFailable(FailableSupplier<S, Throwable> supplier) {
+    static <S> Result<S, Throwable> ofFailable(FailableSupplier<S, Throwable> supplier) {
         try {
             return success(supplier.get());
         } catch (Throwable e) {
+            return error(e);
+        }
+    }
+
+    static Result<Void, RuntimeException> ofFailable(Runnable runnable) {
+        try {
+            runnable.run();
+            return success();
+        } catch (RuntimeException e) {
             return error(e);
         }
     }
@@ -71,5 +71,9 @@ public interface Result<S, E> {
 
     interface FailableSupplier<S, E extends Throwable> {
         S get() throws E;
+    }
+
+    interface FailableRunnable<E extends Throwable> {
+        void run() throws E;
     }
 }
