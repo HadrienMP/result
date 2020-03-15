@@ -18,7 +18,7 @@ public class Success<S, E> implements Result<S, E> {
     }
 
     @Override
-    public Optional<S> getResult() {
+    public Optional<S> getSuccess() {
         return Optional.ofNullable(this.result);
     }
 

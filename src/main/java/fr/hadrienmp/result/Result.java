@@ -57,7 +57,7 @@ public interface Result<S, E> {
 
     <T> T fold(Function<S, T> successFunction, Function<E, T> errorFunction);
 
-    Optional<S> getResult();
+    Optional<S> getSuccess();
 
     Optional<E> getError();
 
