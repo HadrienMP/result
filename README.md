@@ -1,5 +1,8 @@
 Result
 ======
+[![Build Status](https://travis-ci.org/HadrienMP/result.svg?branch=master)](https://travis-ci.org/HadrienMP/result)
+
+
 Provides a result monad for **jvm** based applications. If you don't know what a monad is,
 you still can use Result. Just think of Result as a box that can contain either a success result or an error.
 Once you have the box, you have access to function to transform the success result, 
