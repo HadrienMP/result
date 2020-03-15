@@ -17,7 +17,7 @@ public class ResultTest {
     @Test
     public void mapping_a_success_result_will_the_return_a_new_result_than_contains_the_output_of_map_function() {
         String ok = "OK";
-        Function<String, String> mapFunction = s -> "Mapped: " + s;
+        Function<String, String> mapFunction = successValue -> "Applied on success: " + successValue;
 
         assertThat(Result.success(ok).map(mapFunction))
                 .isEqualTo(Result.success(mapFunction.apply(ok)));
@@ -25,9 +25,9 @@ public class ResultTest {
 
     @Test
     public void mapping_an_error_will_return_a_new_error_containing_the_existing_error() {
-        Result<String, String> success = Result.error("KO");
-        String result = success.fold(s -> "Success: " + s, error -> "Failure: " + error);
-        assertThat(result).isEqualTo("Failure: KO");
+        Function<String, String> mapFunction = successValue -> "Applied on success: " + successValue;
+        Result<String, String> result = Result.<String, String>error("KO").map(mapFunction);
+        assertThat(result).isEqualTo(Result.error("KO"));
     }
     /*
      * -------------------------
@@ -59,16 +59,19 @@ public class ResultTest {
         Result<String, String> success = Result.success("Success");
         assertThat(success.isSuccess()).isTrue();
     }
+
     @Test
     public void isSuccess_is_false_for_Error() {
         Result<String, String> success = Result.error("Error message");
         assertThat(success.isSuccess()).isFalse();
     }
+
     @Test
     public void isError_is_false_for_Success() {
         Result<String, String> success = Result.success("Success");
         assertThat(success.isError()).isFalse();
     }
+
     @Test
     public void isError_is_true_for_Error() {
         Result<String, String> success = Result.error("Error message");
