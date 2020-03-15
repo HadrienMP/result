@@ -1,5 +1,6 @@
-package fr.hadrienmp.result;
+package fr.hadrienmp.result.monad.laws;
 
+import fr.hadrienmp.result.Result;
 import org.junit.Test;
 
 import java.util.function.Function;
