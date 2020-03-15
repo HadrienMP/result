@@ -1,6 +1,7 @@
 Result
 ======
 [![Build Status](https://travis-ci.org/HadrienMP/result.svg?branch=master)](https://travis-ci.org/HadrienMP/result)
+[![codecov](https://codecov.io/gh/HadrienMP/result/branch/master/graph/badge.svg)](https://codecov.io/gh/HadrienMP/result)
 
 
 Provides a result monad for **jvm** based applications. If you don't know what a monad is,
