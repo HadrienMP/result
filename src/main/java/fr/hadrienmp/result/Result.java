@@ -40,7 +40,7 @@ public interface Result<S, E> {
         }
     }
 
-    static <S> Result<S, Throwable> ofFailable(FailableSupplier<S, Throwable> supplier) {
+    static <S> Result<S, Throwable> ofFailable(FailableSupplier<S> supplier) {
         try {
             return success(supplier.get());
         } catch (Throwable e) {
@@ -78,8 +78,8 @@ public interface Result<S, E> {
 
     <T> Result<T, E> flatMap(Function<S, Result<T, E>> mapFunction);
 
-    interface FailableSupplier<S, E extends Throwable> {
-        S get() throws E;
+    interface FailableSupplier<S> {
+        S get() throws Throwable;
     }
 
     interface FailableRunnable {
