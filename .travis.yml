@@ -1,6 +1,8 @@
 language: java
 env:
   - CODECOV_TOKEN="819bc8e2-d1a7-4360-97b3-dc530f7d93a5"
-script: "mvn install cobertura:cobertura"
+jdk:
+  - oraclejdk8
+script: "mvn cobertura:cobertura"
 after_success:
   - bash <(curl -s https://codecov.io/bash)
