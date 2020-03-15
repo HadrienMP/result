@@ -3,6 +3,7 @@ package fr.hadrienmp.result;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 public interface Result<S, E> {
     static <S, E> Result<S, E> success(S result) {
@@ -21,12 +22,21 @@ public interface Result<S, E> {
         return success(null);
     }
 
-    static Result<Void, Throwable> ofFailable(FailableRunnable<?> runnable) {
+    static Result<Void, Throwable> ofFailable(FailableRunnable runnable) {
         try {
             runnable.run();
             return success();
         } catch (Throwable exception) {
             return error(exception);
+        }
+    }
+
+    static Result<Void, RuntimeException> ofFailable(Runnable runnable) {
+        try {
+            runnable.run();
+            return success();
+        } catch (RuntimeException e) {
+            return error(e);
         }
     }
 
@@ -38,10 +48,9 @@ public interface Result<S, E> {
         }
     }
 
-    static Result<Void, RuntimeException> ofFailable(Runnable runnable) {
+    static <S> Result<S, RuntimeException> ofFailableJavaSupplier(Supplier<S> supplier) {
         try {
-            runnable.run();
-            return success();
+            return success(supplier.get());
         } catch (RuntimeException e) {
             return error(e);
         }
@@ -73,7 +82,7 @@ public interface Result<S, E> {
         S get() throws E;
     }
 
-    interface FailableRunnable<E extends Throwable> {
-        void run() throws E;
+    interface FailableRunnable {
+        void run() throws Throwable;
     }
 }

@@ -4,17 +4,24 @@ import org.junit.Test;
 
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResultFactoryTest {
 
-    protected static final Result.FailableRunnable<Throwable> failingRunnable = () -> {
+    private static final Result.FailableRunnable failingRunnable = () -> {
         throw new Exception("failed");
     };
-    protected static final Result.FailableRunnable<Throwable> succeedingRunnable = () -> {
+    private static final Result.FailableRunnable succeedingRunnable = () -> {
         // do stuff
     };
+
+    /*
+     * -------------------------------
+     * ofFailable java runnable
+     * -------------------------------
+     */
 
     @Test
     public void ofFailable_java_runnable_will_return_a_null_containing_result_for_a_success() {
@@ -32,6 +39,12 @@ public class ResultFactoryTest {
         assertThat(result.getError().get()).isInstanceOf(RuntimeException.class);
     }
 
+    /*
+     * -------------------------------
+     * ofFailable checked exception runnable
+     * -------------------------------
+     */
+
     @Test
     public void can_be_created_from_an_exception_throwing_runnable() {
         Result<Void, Throwable> result = Result.ofFailable(failingRunnable);
@@ -43,6 +56,27 @@ public class ResultFactoryTest {
         Result<Void, Throwable> result = Result.ofFailable(succeedingRunnable);
         assertThat(result.isSuccess()).isTrue();
     }
+
+    /*
+     * -------------------------------
+     * ofFailable java runtime supplier
+     * -------------------------------
+     */
+
+    @Test
+    public void can_be_created_from_a_java_supplier() {
+        Supplier<String> supplier = () -> {
+            throw new RuntimeException();
+        };
+        Result<String, RuntimeException> result = Result.ofFailableJavaSupplier(supplier);
+        assertThat(result.isError());
+    }
+
+    /*
+     * -------------------------------
+     * ofFailable checked exception supplier
+     * -------------------------------
+     */
 
     @Test
     public void can_be_created_from_an_exception_throwing_method() {
@@ -64,6 +98,12 @@ public class ResultFactoryTest {
         }
         return i;
     }
+
+    /*
+     * -------------------------------
+     * Other factories
+     * -------------------------------
+     */
 
     @Test
     public void success_with_error_class_is_useful_to_turn_an_optional_into_a_result() {
