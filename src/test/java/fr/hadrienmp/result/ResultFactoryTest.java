@@ -19,6 +19,28 @@ public class ResultFactoryTest {
 
     /*
      * -------------------------------
+     * ofFailable java runnable
+     * -------------------------------
+     */
+
+    @Test
+    public void ofFailable_java_runnable_will_return_a_null_containing_result_for_a_success() {
+        Runnable runnable = () -> {
+            // do stuff};
+        };
+        Result<Void, RuntimeException> result = Result.ofFailable(runnable);
+        assertThat(result.isSuccess()).isTrue();
+    }
+
+    @Test
+    public void can_be_created_from_a_java_runnable() {
+        Runnable runnable = () -> {throw new RuntimeException();};
+        Result<Void, RuntimeException> result = Result.ofFailable(runnable);
+        assertThat(result.getError().get()).isInstanceOf(RuntimeException.class);
+    }
+
+    /*
+     * -------------------------------
      * ofFailable checked exception runnable
      * -------------------------------
      */
@@ -26,19 +48,19 @@ public class ResultFactoryTest {
     @Test
     public void can_be_created_from_an_exception_throwing_runnable_as_a_lambda() {
         Stub stub = new Stub();
-        Result<Void, Throwable> result = Result.ofFailable(stub::doStuff);
+        Result<Void, RuntimeException> result = Result.ofFailable(() -> stub.throwRuntime());
         assertThat(result.getError().get()).isInstanceOf(Exception.class);
     }
 
     @Test
     public void can_be_created_from_an_exception_throwing_runnable() {
-        Result<Void, Throwable> result = Result.ofFailable(failingRunnable);
+        Result<Void, Throwable> result = Result.ofCheckedFailable(failingRunnable);
         assertThat(result.getError().get()).isInstanceOf(Exception.class);
     }
 
     @Test
     public void ofFailable_runnable_will_return_a_null_containing_result_for_a_success() {
-        Result<Void, Throwable> result = Result.ofFailable(succeedingRunnable);
+        Result<Void, Throwable> result = Result.ofCheckedFailable(succeedingRunnable);
         assertThat(result.isSuccess()).isTrue();
     }
 
@@ -53,7 +75,7 @@ public class ResultFactoryTest {
         Supplier<String> supplier = () -> {
             throw new RuntimeException();
         };
-        Result<String, RuntimeException> result = Result.ofFailableJavaSupplier(supplier);
+        Result<String, RuntimeException> result = Result.ofFailable(supplier);
         assertThat(result.isError());
     }
 
@@ -66,14 +88,14 @@ public class ResultFactoryTest {
     @Test
     public void can_be_created_from_an_exception_throwing_method() {
         int i = 0;
-        Result<Integer, Throwable> result = Result.ofFailable(() -> exceptionForMinus1(i));
+        Result<Integer, Throwable> result = Result.ofCheckedFailable(() -> exceptionForMinus1(i));
         assertThat(result).isEqualTo(Result.success(i));
     }
 
     @Test
     public void ofCheckedFailable_will_return_an_error_containing_the_exception() {
         int i = -1;
-        Result<Integer, Throwable> result = Result.ofFailable(() -> exceptionForMinus1(i));
+        Result<Integer, Throwable> result = Result.ofCheckedFailable(() -> exceptionForMinus1(i));
         assertThat(result.getError().get()).isInstanceOf(Exception.class);
     }
 
@@ -111,8 +133,8 @@ public class ResultFactoryTest {
     }
 
     private static final class Stub {
-        private void doStuff() {
-            // do some stuff
+        private void throwRuntime() {
+            throw new RuntimeException();
         }
     }
 }

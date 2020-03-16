@@ -22,7 +22,7 @@ public interface Result<S, E> {
         return success(null);
     }
 
-    static Result<Void, Throwable> ofFailable(FailableRunnable runnable) {
+    static Result<Void, Throwable> ofCheckedFailable(FailableRunnable runnable) {
         try {
             runnable.run();
             return success();
@@ -31,7 +31,16 @@ public interface Result<S, E> {
         }
     }
 
-    static <S> Result<S, Throwable> ofFailable(FailableSupplier<S> supplier) {
+    static Result<Void, RuntimeException> ofFailable(Runnable runnable) {
+        try {
+            runnable.run();
+            return success();
+        } catch (RuntimeException e) {
+            return error(e);
+        }
+    }
+
+    static <S> Result<S, Throwable> ofCheckedFailable(FailableSupplier<S> supplier) {
         try {
             return success(supplier.get());
         } catch (Throwable e) {
@@ -39,7 +48,7 @@ public interface Result<S, E> {
         }
     }
 
-    static <S> Result<S, RuntimeException> ofFailableJavaSupplier(Supplier<S> supplier) {
+    static <S> Result<S, RuntimeException> ofFailable(Supplier<S> supplier) {
         try {
             return success(supplier.get());
         } catch (RuntimeException e) {
