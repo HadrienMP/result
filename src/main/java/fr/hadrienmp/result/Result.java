@@ -31,15 +31,6 @@ public interface Result<S, E> {
         }
     }
 
-    static Result<Void, RuntimeException> ofFailable(Runnable runnable) {
-        try {
-            runnable.run();
-            return success();
-        } catch (RuntimeException e) {
-            return error(e);
-        }
-    }
-
     static <S> Result<S, Throwable> ofFailable(FailableSupplier<S> supplier) {
         try {
             return success(supplier.get());

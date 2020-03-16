@@ -19,31 +19,16 @@ public class ResultFactoryTest {
 
     /*
      * -------------------------------
-     * ofFailable java runnable
-     * -------------------------------
-     */
-
-    @Test
-    public void ofFailable_java_runnable_will_return_a_null_containing_result_for_a_success() {
-        Runnable runnable = () -> {
-            // do stuff};
-        };
-        Result<Void, RuntimeException> result = Result.ofFailable(runnable);
-        assertThat(result.isSuccess()).isTrue();
-    }
-
-    @Test
-    public void can_be_created_from_a_java_runnable() {
-        Runnable runnable = () -> {throw new RuntimeException();};
-        Result<Void, RuntimeException> result = Result.ofFailable(runnable);
-        assertThat(result.getError().get()).isInstanceOf(RuntimeException.class);
-    }
-
-    /*
-     * -------------------------------
      * ofFailable checked exception runnable
      * -------------------------------
      */
+
+    @Test
+    public void can_be_created_from_an_exception_throwing_runnable_as_a_lambda() {
+        Stub stub = new Stub();
+        Result<Void, Throwable> result = Result.ofFailable(stub::doStuff);
+        assertThat(result.getError().get()).isInstanceOf(Exception.class);
+    }
 
     @Test
     public void can_be_created_from_an_exception_throwing_runnable() {
@@ -123,5 +108,11 @@ public class ResultFactoryTest {
         };
         Result<Void, String> result = failableVoid.apply(0);
         assertThat(result.orElseThrow(RuntimeException::new)).isNull();
+    }
+
+    private static final class Stub {
+        private void doStuff() {
+            // do some stuff
+        }
     }
 }
